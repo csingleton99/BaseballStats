@@ -141,6 +141,9 @@
   <ItemGroup>
     <ClCompile Include="singleton_cmpsc330_baseballstats.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Bobson Dugnutt.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

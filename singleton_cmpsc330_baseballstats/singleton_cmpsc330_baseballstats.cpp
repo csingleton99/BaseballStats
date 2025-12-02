@@ -1,20 +1,29 @@
-// singleton_cmpsc330_baseballstats.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// chris singleton, December 2nd, 2025. CMPSC 330, Ganther. Baseball Stats Final
+// This program is designed to read input from files as batting statistics for a baseball player
+// The program then performs calculations to derive further stats, and prints out the information together.
 //
 
 #include <iostream>
+#include <fstream>
+#include <string>
+
+std::string myText;
+std::ifstream myFile("Bobson Dugnutt.txt");
+
+int atBats;
+int hits;
+int doubles;
+int triples;
+int homeruns;
+int strikeOuts;
+
 
 int main()
-{
-    std::cout << "Hello World!\n";
+{   
+    while (getline(myFile, myText))
+    {
+        std::cout << myText;
+    }
+
+    myFile.close();
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
