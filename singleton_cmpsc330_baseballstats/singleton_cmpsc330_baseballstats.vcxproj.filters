@@ -21,5 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Bobson Dugnutt.txt" />
+    <Text Include="sleve mcdichael.txt" />
+    <Text Include="mike truk.txt" />
   </ItemGroup>
 </Project>

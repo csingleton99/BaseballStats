@@ -11,13 +11,6 @@
 //Program requirements
 // Need a split function, doesn't need to be robust, we're splitting on spaces
 // Read data from a given text file.
-// The first line will be the player's name, which may include spaces.
-// Every line after that gets converted into a vector. Each element of the vector is then += into its respective variable to total it.
-// I don't need to use cases. Once each vector is made, I can just refer to each index directly. The loop just makes sure I check ever line
-// 
-// 
-// Make sure to verify that input data is valid.
-// If there is ever an error, spit out an error message and end the program
 // 
 // Exceptions:
 // - # of hits cannot be greater than # of at bats
@@ -28,12 +21,14 @@
 // Calculations:
 // - Batting average ((hits / atBats) * 1000)
 // - Slugging Percent = (((homeruns * 4) + (triples * 3) + (doubles * 2) + singles) / (atBats)) * 1000 !!! MUST BE AN INT
-// - On Base Percent = 
+// - On Base Percent = (hits + walks + beans) / ( atBats + walks + beans + sacrifice flies)
+    // - This requires us to know walks, beans, and sac flies, which we do not have ???
 // - Singles = hits - (homeruns + triples + doubles)
 // - Plate Appearances = atBats + walks (??? we aren't given walks ???)
 //
 
 std::string fileLine;
+std::string playerFile;
 
 std::string playerName;
 int atBats = 0;
@@ -43,44 +38,98 @@ int doubles = 0;
 int triples = 0;
 int homeruns = 0;
 int strikeOuts = 0;
+int battingAverage = 0;
+int slugPercent = 0;
 std::vector<int> statList;
 
 // Split function to turn a list of integers into a vector of integers
 std::vector<int> splitStats(std::string lineHere)
 {
-    std::vector<int> playerStats;
+    std::vector<int> playerStats = { 0,0,0,0,0,0 };
+    std::string currentSet = "";
+    char delimeter = ' ';
+    int counter = 0;
+    bool contDet = false;
 
-    // - Loop through the given string, concatenating each character until you hit a space
-    // - Store in case 1 (first element of the vector)
-        // - Note: this step needs a try-catch in case the inputs aren't integers
-    // - Increment the counter
-    // - Repeat looping until you hit another space
-    // - Store in case 2 etc...
-    // Quit the loop once all cases are exhausted/ the counter is at 6
-    
+    // extra space required to push final cycle
+    lineHere += ' ';
+
+    for (char elem : lineHere)
+    {
+        // only consider data up to six elements
+        if (counter < 6)
+        {
+            // if the entry _is_ a character, add it to the current set
+            if (elem != delimeter)
+            {
+                currentSet += elem;
+                contDet = true;
+            }
+
+            // if it is a space, do not add, and flip the continuity flag
+            else if (elem == delimeter and contDet == true)
+            {
+                contDet = false;
+                try
+                {
+                    playerStats.at(counter) = stoi(currentSet);
+                }
+                catch (const std::exception& e)
+                {
+                    std::cout << e.what() << "\nAll data given must be given in integer form. Ending program...\n";
+                    exit(0);
+                }
+
+                currentSet = "";
+                counter++;
+            }
+        }
+    }
     return playerStats;
 }
 
-void validateStats(std::vector<int> lineHere)
+// input validation checks for specifically valid data
+void validateStats(std::vector<int> statsHere)
 {
-    // - # of hits cannot be greater than # of at bats
-    // - total of singles, doubles, triples, and home runs cannot exceed # of hits
-    // - all stats must be a single numerical digit
+    // Makes sure elements are only a single integer
+    for (int elem : statsHere)
+    {
+        if (elem > 9)
+        {
+            std::cout << "Your data should only include single integers. Ending program...\n";
+            exit(0);
+        }
+    }
+
+    // Makes sure that there are not more homeruns, doubles, and triples than hits
+    // Note: I excluded singles because that value is calculated as the difference hits and doubles, triples, and homeruns
+    if (statsHere.at(1) < (statsHere.at(2) + statsHere.at(3) + statsHere.at(4)))
+    {
+        std::cout << "Your data includes more successful homeruns, doubles, and triples than hits. Ending program...\n";
+        exit(0);
+    }
+
+    // Makes sure that there are not more hits than at-bats
+    if (statsHere.at(0) < statsHere.at(1))
+    {
+        std::cout << "Your data includes more successful hits than at-bats. Ending program...\n";
+        exit(0);
+    }
 }
 
 int main()
 {   
     // Accept file
-    std::ifstream userFile("Bobson Dugnutt.txt"); // Make this into user input later
+    std::cout << "Welcome to the baseball stats calculator!\nPlease enter the name of your player's file now:\n";
+    std::getline(std::cin, playerFile);
+    std::ifstream userFile(playerFile); // Make this into user input later
 
     // Store player name
     getline(userFile, fileLine);
     playerName = fileLine;
 
-    std::cout << fileLine << "\n"; // TEST CODE
-
     // Loop - turn proceding lines into vectors, test each vector for validity, and sum each element
-    while (getline(userFile, fileLine)) // placeholder. this will be a for loop later
+    while (getline(userFile, fileLine))
     {
         // Get current line
         statList = splitStats(fileLine);
@@ -89,22 +138,30 @@ int main()
         validateStats(statList);
 
         //Sum each element
-
-        std::cout << fileLine << "\n"; // TEST CODE
+        atBats += statList.at(0);
+        hits += statList.at(1);
+        doubles += statList.at(2);
+        triples += statList.at(3);
+        homeruns += statList.at(4);
+        strikeOuts += statList.at(5);
     }
 
     // Perform and store additional calculations
+    singles += hits - (doubles + triples + homeruns);
+    battingAverage = ((1.0 * hits) / (1.0 * atBats)) * 1000;
+    slugPercent = ((homeruns * 4.0) + (triples * 3.0) + (doubles * 2.0) + (singles * 1.0)) / (atBats * 1.0) * 1000;
+
     // Print results
-    //
-
-
-    /*getline(userFile, fileLine);
-    std::cout << fileLine << "\n";
-
-    while (getline(userFile, fileLine))
-    {
-        std::cout << fileLine << "\n";
-    }*/
+    std::cout << "\n" << "Player - " << playerName << "\n\n";
+    printf("AB:%7d\n", atBats);
+    printf("H:%8d\n", hits);
+    printf("S:%8d\n", singles);
+    printf("D:%8d\n", doubles);
+    printf("T:%8d\n", triples);
+    printf("HR:%7d\n", homeruns);
+    printf("SO:%7d\n", strikeOuts);
+    printf("BA:%7d\n", battingAverage);
+    printf("SLG%%:%5d\n", slugPercent);
 
     userFile.close();
 }

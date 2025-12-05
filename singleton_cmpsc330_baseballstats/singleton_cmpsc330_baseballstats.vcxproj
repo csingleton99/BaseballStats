@@ -143,6 +143,8 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Bobson Dugnutt.txt" />
+    <Text Include="mike truk.txt" />
+    <Text Include="sleve mcdichael.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
