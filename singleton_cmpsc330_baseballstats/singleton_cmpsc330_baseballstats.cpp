@@ -153,7 +153,7 @@ int main()
     singles += hits - (doubles + triples + homeruns);
     battingAverage = ((1.0 * hits) / (1.0 * atBats)) * 1000;
     slugPercent = ((homeruns * 4.0) + (triples * 3.0) + (doubles * 2.0) + (singles * 1.0)) / (atBats * 1.0) * 1000;
-    plateAppearances = atBats = walks;
+    plateAppearances = atBats + walks;
 
     // Print results
     std::cout << "\n" << "Player - " << playerName << "\n\n";
@@ -163,10 +163,10 @@ int main()
     printf("D:%8d\n", doubles);
     printf("T:%8d\n", triples);
     printf("HR:%7d\n", homeruns);
-    printf("SO:%7d\n", strikeOuts);
+    printf("K:%8d\n", strikeOuts);
     printf("BB:%7d\n", walks);
-    printf("BA:%7d\n", battingAverage);
     printf("PA:%7d\n", plateAppearances);
+    printf("BA:%7d\n", battingAverage);
     printf("SLG%%:%5d\n", slugPercent);
 
     userFile.close();
