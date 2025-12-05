@@ -39,15 +39,17 @@ int triples = 0;
 int homeruns = 0;
 int strikeOuts = 0;
 int walks = 0;
+int beans = 0;
 int battingAverage = 0;
 int slugPercent = 0;
+int onBasePercent = 0;
 int plateAppearances = 0;
 std::vector<int> statList;
 
 // Split function to turn a list of integers into a vector of integers
 std::vector<int> splitStats(std::string lineHere)
 {
-    std::vector<int> playerStats = { 0,0,0,0,0,0 };
+    std::vector<int> playerStats = { 0,0,0,0,0,0,0 };
     std::string currentSet = "";
     char delimeter = ' ';
     int counter = 0;
@@ -59,7 +61,7 @@ std::vector<int> splitStats(std::string lineHere)
     for (char elem : lineHere)
     {
         // only consider data up to six elements
-        if (counter < 6)
+        if (counter < 7)
         {
             // if the entry _is_ a character, add it to the current set
             if (elem != delimeter)
@@ -145,29 +147,32 @@ int main()
         doubles += statList.at(2);
         triples += statList.at(3);
         homeruns += statList.at(4);
-        strikeOuts += statList.at(5);
+        walks += statList.at(5);
+        strikeOuts += statList.at(6);
     }
 
     // Perform and store additional calculations
-    walks = atBats - (hits + strikeOuts);
-    singles += hits - (doubles + triples + homeruns);
+    singles = hits - (doubles + triples + homeruns);
+    beans = atBats - (hits + doubles + singles + triples + homeruns + walks);
     battingAverage = ((1.0 * hits) / (1.0 * atBats)) * 1000;
     slugPercent = ((homeruns * 4.0) + (triples * 3.0) + (doubles * 2.0) + (singles * 1.0)) / (atBats * 1.0) * 1000;
+    onBasePercent = ((hits * (1.0) + walks + beans) / (atBats * (1.0) + walks + beans)) * 100;
     plateAppearances = atBats + walks;
 
     // Print results
     std::cout << "\n" << "Player - " << playerName << "\n\n";
-    printf("AB:%7d\n", atBats);
-    printf("H:%8d\n", hits);
-    printf("S:%8d\n", singles);
-    printf("D:%8d\n", doubles);
-    printf("T:%8d\n", triples);
-    printf("HR:%7d\n", homeruns);
-    printf("K:%8d\n", strikeOuts);
-    printf("BB:%7d\n", walks);
-    printf("PA:%7d\n", plateAppearances);
-    printf("BA:%7d\n", battingAverage);
-    printf("SLG%%:%5d\n", slugPercent);
+    printf("At Bats:%8d\n", atBats);
+    printf("Hits:%11d\n", hits);
+    printf("Singles:%8d\n", singles);
+    printf("Doubles:%8d\n", doubles);
+    printf("Triples:%8d\n", triples);
+    printf("Homeruns:%7d\n", homeruns);
+    printf("Strikeouts:%5d\n", strikeOuts);
+    printf("Walks:%10d\n", walks);
+    printf("Plate Apps:%5d\n", plateAppearances);
+    printf("On Base %%:%6d\n", onBasePercent);
+    printf("Bat Avg:%8d\n", battingAverage);
+    printf("Slug %%:%9d\n", slugPercent);
 
     userFile.close();
 }
