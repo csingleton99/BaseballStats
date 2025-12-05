@@ -38,8 +38,10 @@ int doubles = 0;
 int triples = 0;
 int homeruns = 0;
 int strikeOuts = 0;
+int walks = 0;
 int battingAverage = 0;
 int slugPercent = 0;
+int plateAppearances = 0;
 std::vector<int> statList;
 
 // Split function to turn a list of integers into a vector of integers
@@ -147,9 +149,11 @@ int main()
     }
 
     // Perform and store additional calculations
+    walks = atBats - (hits + strikeOuts);
     singles += hits - (doubles + triples + homeruns);
     battingAverage = ((1.0 * hits) / (1.0 * atBats)) * 1000;
     slugPercent = ((homeruns * 4.0) + (triples * 3.0) + (doubles * 2.0) + (singles * 1.0)) / (atBats * 1.0) * 1000;
+    plateAppearances = atBats = walks;
 
     // Print results
     std::cout << "\n" << "Player - " << playerName << "\n\n";
@@ -160,7 +164,9 @@ int main()
     printf("T:%8d\n", triples);
     printf("HR:%7d\n", homeruns);
     printf("SO:%7d\n", strikeOuts);
+    printf("BB:%7d\n", walks);
     printf("BA:%7d\n", battingAverage);
+    printf("PA:%7d\n", plateAppearances);
     printf("SLG%%:%5d\n", slugPercent);
 
     userFile.close();
