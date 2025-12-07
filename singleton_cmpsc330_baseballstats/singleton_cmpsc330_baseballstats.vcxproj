@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Bobson Dugnutt.txt" />
+    <Text Include="john dingle.txt" />
     <Text Include="mike truk.txt" />
     <Text Include="sleve mcdichael.txt" />
   </ItemGroup>

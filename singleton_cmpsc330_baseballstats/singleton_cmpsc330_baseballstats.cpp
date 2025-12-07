@@ -8,25 +8,6 @@
 #include <string>
 #include <vector>
 
-//Program requirements
-// Need a split function, doesn't need to be robust, we're splitting on spaces
-// Read data from a given text file.
-// 
-// Exceptions:
-// - # of hits cannot be greater than # of at bats
-// - total of singles, doubles, triples, and home runs cannot exceed # of hits
-// - all stats must be a single numerical digit
-// - Note: since we delimit with spaces, this automatically ignores empty lines
-// 
-// Calculations:
-// - Batting average ((hits / atBats) * 1000)
-// - Slugging Percent = (((homeruns * 4) + (triples * 3) + (doubles * 2) + singles) / (atBats)) * 1000 !!! MUST BE AN INT
-// - On Base Percent = (hits + walks + beans) / ( atBats + walks + beans + sacrifice flies)
-    // - This requires us to know walks, beans, and sac flies, which we do not have ???
-// - Singles = hits - (homeruns + triples + doubles)
-// - Plate Appearances = atBats + walks (??? we aren't given walks ???)
-//
-
 std::string fileLine;
 std::string playerFile;
 
@@ -80,7 +61,7 @@ std::vector<int> splitStats(std::string lineHere)
                 }
                 catch (const std::exception& e)
                 {
-                    std::cout << e.what() << "\nAll data given must be given in integer form. Ending program...\n";
+                    std::cout << "\nError:" << e.what() << "\nAll data given must be given in integer form. Ending program...\n";
                     exit(0);
                 }
 
@@ -128,6 +109,13 @@ int main()
     std::getline(std::cin, playerFile);
     std::ifstream userFile(playerFile); // Make this into user input later
 
+    // If there is no file by the name entered, end the program
+    if (!userFile)
+    {
+        std::cout << "There is no file with that name. Ending program...\n";
+        exit(0);
+    }
+
     // Store player name
     getline(userFile, fileLine);
     playerName = fileLine;
@@ -153,26 +141,28 @@ int main()
 
     // Perform and store additional calculations
     singles = hits - (doubles + triples + homeruns);
-    beans = atBats - (hits + doubles + singles + triples + homeruns + walks);
+    beans = atBats - (hits + doubles + singles + triples + homeruns + walks + strikeOuts);
     battingAverage = ((1.0 * hits) / (1.0 * atBats)) * 1000;
     slugPercent = ((homeruns * 4.0) + (triples * 3.0) + (doubles * 2.0) + (singles * 1.0)) / (atBats * 1.0) * 1000;
-    onBasePercent = ((hits * (1.0) + walks + beans) / (atBats * (1.0) + walks + beans)) * 100;
     plateAppearances = atBats + walks;
+
+    // this uses a simplified version of the calcualation for OBP
+    onBasePercent = ((hits * (1.0) + walks + beans) / (plateAppearances * (1.0))) * 100;
 
     // Print results
     std::cout << "\n" << "Player - " << playerName << "\n\n";
-    printf("At Bats:%8d\n", atBats);
-    printf("Hits:%11d\n", hits);
-    printf("Singles:%8d\n", singles);
-    printf("Doubles:%8d\n", doubles);
-    printf("Triples:%8d\n", triples);
-    printf("Homeruns:%7d\n", homeruns);
-    printf("Strikeouts:%5d\n", strikeOuts);
-    printf("Walks:%10d\n", walks);
-    printf("Plate Apps:%5d\n", plateAppearances);
-    printf("On Base %%:%6d\n", onBasePercent);
-    printf("Bat Avg:%8d\n", battingAverage);
-    printf("Slug %%:%9d\n", slugPercent);
+    printf("At Bats:%9d\n", atBats);
+    printf("Hits:%12d\n", hits);
+    printf("Singles:%9d\n", singles);
+    printf("Doubles:%9d\n", doubles);
+    printf("Triples:%9d\n", triples);
+    printf("Homeruns:%8d\n", homeruns);
+    printf("Strikeouts:%6d\n", strikeOuts);
+    printf("Walks:%11d\n", walks);
+    printf("Plate Apps:%6d\n", plateAppearances);
+    printf("On Base %%:%7d\n", onBasePercent);
+    printf("Bat Avg:%9d\n", battingAverage);
+    printf("Slug %%:%10d\n", slugPercent);
 
     userFile.close();
 }
